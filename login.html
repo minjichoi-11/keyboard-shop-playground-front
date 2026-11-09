@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 슬라이드 오버레이</title>
+  <style>
+    /* 기본 페이지 스타일 */
+    body {
+      margin: 0;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      background-color: #f5f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* 메인 화면의 로그인 유도 버튼 */
+    .login-trigger-btn {
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      background-color: #1d1d1f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-trigger-btn:hover {
+      background-color: #434344;
+    }
+
+    /* 🌟 배경을 어둡게 만드는 오버레이 (초기 상태: 숨김) */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6); /* 60% 어둡게 설정 */
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    /* 🌟 우측 로그인 슬라이드 패널 (초기 상태: 화면 우측 밖에 숨김) */
+    .login-panel {
+      position: fixed;
+      top: 0;
+      right: -450px; /* 패널 너비만큼 오른쪽으로 밀어내서 숨김 */
+      width: 450px;
+      height: 100%;
+      background-color: #ffffff;
+      box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      padding: 40px;
+      box-sizing: border-box;
+      transition: right 0.3s ease; /* 부드럽게 밀려 나오는 애니메이션 */
+    }
+
+    /* 활성화 상태 클래스 (자바스크립트로 추가할 예정) */
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .login-panel.active {
+      right: 0; /* 화면 안으로 들어옴 */
+    }
+
+    /* 로그인 창 내부 UI 스타일 */
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .panel-header h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #86868b;
+    }
+
+    /* 로그인 폼 스타일 */
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      color: #1d1d1f;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d2d2d7;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      outline: none;
+    }
+    .input-group input:focus {
+      border-color: #0066cc;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .submit-btn:hover {
+      background-color: #004499;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 메인 화면 (로그인 버튼만 배치) -->
+  <button class="login-trigger-btn" id="openLoginBtn">Sign In</button>
+
+  <!-- 어두운 배경 오버레이 -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- 우측 로그인 슬라이드 창 -->
+  <div class="login-panel" id="loginPanel">
+    <div class="panel-header">
+      <h2>Sign In</h2>
+      <button class="close-btn" id="closeLoginBtn">✕</button>
+    </div>
+
+  <!-- 로그인 폼 -->
+<form id="loginForm">
+  <div class="input-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Enter your email" required>
+  </div>
+
+  <div class="input-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter your password" required>
+  </div>
+
+  <button type="submit" class="submit-btn">Continue</button>
+</form>
+
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- 작동을 위한 자바스크립트 -->
+  <script>
+    const openBtn = document.getElementById('openLoginBtn');
+    const closeBtn = document.getElementById('closeLoginBtn');
+    const overlay = document.getElementById('overlay');
+    const loginPanel = document.getElementById('loginPanel');
+
+    // 로그인 창 열기 함수
+    function openLogin() {
+      overlay.classList.add('active');
+      loginPanel.classList.add('active');
+    }
+
+    // 로그인 창 닫기 함수
+    function closeLogin() {
+      overlay.classList.remove('active');
+      loginPanel.classList.remove('active');
+    }
+
+    // 이벤트 연결
+    openBtn.addEventListener('click', openLogin);
+    closeBtn.addEventListener('click', closeLogin);
+    overlay.addEventListener('click', closeLogin); // 어두운 배경을 눌러도 닫히게 설정
+    
+    const loginForm = document.getElementById('loginForm');
+  const loginMessage = document.getElementById('loginMessage');
+
+  loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      const response = await fetch('http://localhost:8081/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const result = await response.json();
+      loginMessage.textContent = response.ok
+        ? `${result.message} ${result.userName}`
+        : result.message;
+    } catch (error) {
+      loginMessage.textContent = '서버에 연결할 수 없습니다.';
+      console.error(error);
+    }
+  });
+  
+  </script>
+
+</body>
+</html>

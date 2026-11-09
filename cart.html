@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>오버레이 배경 어둡게 효과</title>
+  <style>
+    /* 기본 페이지 스타일 (배경) */
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+    }
+    
+    .main-content {
+      padding: 50px;
+      text-align: center;
+    }
+
+    /* 🌟 핵심: 배경을 어둡게 만드는 오버레이 레이어 */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Black 색상에 50% 불투명도 조절 */
+      z-index: 999; /* 다른 요소들보다 무조건 위에 보이도록 설정 */
+    }
+
+    /* 우측 팝업창 (로그인 / 카트) */
+    .side-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 400px;
+      height: 100%;
+      background-color: #ffffff;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000; /* 오버레이 딤드 처리보다 더 위에 오도록 설정 */
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 메인 기본 화면 내용 -->
+  <div class="main-content">
+    <h1>메인 화면 페이지</h1>
+    <p>오버레이가 켜지면 이 배경 영역 전체가 어두워집니다.</p>
+  </div>
+
+  <!-- 🌟 화면을 어둡게 만들어주는 딤드 배경 -->
+  <div class="overlay"></div>
+
+  <!-- 우측 슬라이드 팝업창 -->
+  <div class="side-panel">
+    <span class="close-btn">✕</span>
+    <h2>Your Cart</h2>
+    <p>Your cart is empty</p>
+  </div>
+
+</body>
+</html>
